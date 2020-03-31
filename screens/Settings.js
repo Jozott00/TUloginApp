@@ -6,8 +6,12 @@ import {
   View,
   TextInput,
   Button,
-  AsyncStorage
+  AsyncStorage,
+  KeyboardAvoidingView,
+  Platform,
+  Linking
 } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function Settings() {
   const [inputValue, setInputValue] = useState(retrieveData);
@@ -30,7 +34,6 @@ export default function Settings() {
 
   const retrieveData = async () => {
     const value = await AsyncStorage.getItem('bookmarklink');
-    console.log(value);
     value == null ? '' : value;
 
     return value;
@@ -39,6 +42,8 @@ export default function Settings() {
   const storeData = async props => {
     try {
       await AsyncStorage.setItem('bookmarklink', inputValue);
+      await AsyncStorage.setItem('reloadTuwel', JSON.stringify(true));
+      await AsyncStorage.setItem('reloadTiss', JSON.stringify(true));
       setErrorMsg('');
       setSuccessMsg('Bookmark wurde gespeichert!');
       // props.navigation.navigate('TuwelScreen', { isFirstLoad: true });
@@ -49,19 +54,55 @@ export default function Settings() {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={{ color: 'red' }}>{errorMsg}</Text>
-      <Text style={{ color: 'green', marginBottom: 20 }}>{successMsg}</Text>
-      <Text style={{ fontSize: 20, marginBottom: 20 }}>Dein Bookmarklink</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={setInputValue}
-        value={inputValue}
-      />
-      <Button title="Speichern" onPress={storeData} />
-    </View>
-  );
+  if (Platform.OS == 'ios') {
+    return (
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+        <Text style={{ color: 'red' }}>{errorMsg}</Text>
+        <Text style={{ color: 'green', marginBottom: 20 }}>{successMsg}</Text>
+        <Text style={{ fontSize: 20, marginBottom: 20 }}>
+          Dein Bookmarklink
+        </Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={setInputValue}
+          value={inputValue}
+        />
+        <Button color="#006699" title="Speichern" onPress={storeData} />
+      </KeyboardAvoidingView>
+    );
+  } else {
+    return [
+      <View behavior="padding" style={styles.container}>
+        <Text style={{ color: 'red' }}>{errorMsg}</Text>
+        <Text style={{ color: 'green', marginBottom: 20 }}>{successMsg}</Text>
+        <Text style={{ fontSize: 20, marginBottom: 20 }}>
+          Dein Bookmarklink
+        </Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={setInputValue}
+          value={inputValue}
+        />
+        <Button color="#006699" title="Speichern" onPress={storeData} />
+      </View>,
+      <View
+        style={{
+          position: 'relative',
+          alignItems: 'flex-end',
+          paddingBottom: 20,
+          paddingRight: 20
+        }}
+      >
+        <TouchableOpacity
+          onPress={() =>
+            Linking.openURL('https://tuwel-264520.appspot.com/impressum')
+          }
+        >
+          <Text style={{ color: '#006699' }}>Impressum</Text>
+        </TouchableOpacity>
+      </View>
+    ];
+  }
 }
 
 const styles = StyleSheet.create({
@@ -75,6 +116,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 2,
     padding: 10,
-    width: '80%'
+    width: '80%',
+    marginBottom: 20
   }
 });

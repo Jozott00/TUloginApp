@@ -4,9 +4,11 @@ import {
   StatusBar,
   StyleSheet,
   View,
-  SafeAreaView
+  SafeAreaView,
+  StatusBarProps
 } from 'react-native';
 import { SplashScreen } from 'expo';
+import Constants from 'expo-constants';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
@@ -71,6 +73,7 @@ export default function App(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#006699'
+    backgroundColor: '#006699',
+    paddingTop: Constants.statusBarHeight
   }
 });

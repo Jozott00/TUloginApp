@@ -3,7 +3,8 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  TouchableOpacityComponent
+  TouchableOpacityComponent,
+  Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -20,7 +21,7 @@ const RoundButton = props => {
   return (
     <TouchableOpacity style={styles.roundButton} onPress={props.onPress}>
       {/* <Text style={styles.buttonText}>{props.children}</Text> */}
-      <Icon name="chevron-left" color={'white'} size={25} />
+      <Icon name={props.name} color={'white'} size={25} />
     </TouchableOpacity>
   );
 };
@@ -43,9 +44,9 @@ const styles = StyleSheet.create({
       width: 1,
       height: 3
     },
-    position: 'absolute',
-    bottom: 10,
-    left: 10,
+    position: Platform.OS == 'ios' ? 'absolute' : 'relative',
+    bottom: Platform.OS == 'ios' ? 20 : 'auto',
+    left: Platform.OS == 'ios' ? 20 : 'auto',
     shadowOpacity: 0.25,
     shadowRadius: 3,
     paddingVertical: 7,
