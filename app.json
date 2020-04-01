@@ -25,7 +25,7 @@
     },
     "android": {
       "package": "com.jozott.tulogin",
-      "versionCode": 102
+      "versionCode": 103
     }
   }
 }
